@@ -6,25 +6,30 @@ variable "ec2_ami" {
   }
 }
 
-# Creating a Variable for region
-
+# region
 variable "region" {
   default = "us-east-1"
 }
 
-# Creating a Variable for instance_type
+# instance_type
 variable "instance_type" {
   type = string
 }
 
-# Creating a Variable for security_group
+# security_group
 variable "security_group" {
   default     = "open_ports"
   description = "Security group name"
 }
 
-# Creating a Variable for key_name
+# key_name
 variable "key_name" {
   default     = "ansible"
   description = "Key Pair name"
+}
+
+# AWS Profile
+variable "aws_profile" {
+  type = string
+  default = "caiolvbarbieri"
 }
