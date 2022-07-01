@@ -73,10 +73,39 @@
         group: vault
         system: true
     
-    - name: Change permissions to Vault User
+    - name: '[/var/lib/vault] Change permissions to Vault User' 
       file:
         path: /var/lib/vault
         state: directory
         recurse: yes
         owner: vault
         group: vault
+
+    - name: '[/etc/vault] Change permissions to Vault User'
+      file:
+        path: /etc/vault
+        state: directory
+        recurse: yes
+        owner: vault
+        group: vault
+
+    - name: '[/var/log/vault] Change permissions to Vault User'
+      file:
+        path: /var/log/vault
+        state: directory
+        recurse: yes
+        owner: vault
+        group: vault
+
+    - name: Writing Vault configuration file
+      copy:
+        dest: /etc/vault/config.json
+        content: |
+          storage "file" {
+            path = "/var/lib/vault/data"
+          }
+
+          listener "tcp" {
+            address     = "0.0.0.0:8200"
+            tls_disable = 1
+          }
