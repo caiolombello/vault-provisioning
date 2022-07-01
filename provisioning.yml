@@ -30,5 +30,53 @@
     - name: Install Vault binary
       unarchive:
         src: https://releases.hashicorp.com/vault/1.11.0/vault_1.11.0_linux_arm64.zip?_ga=2.46861604.266934807.1656688916-601040367.1656688916&_gl=1*1s5r6o3*_ga*NjAxMDQwMzY3LjE2NTY2ODg5MTY.*_ga_P7S46ZYEKW*MTY1NjY4ODkxNS4xLjEuMTY1NjY4OTYyNS4w
-        dest: /usr/local/bin
+        dest: /usr/local/bin/
         remote_src: yes
+      become: yes
+
+    - name: Create Vault Log directory
+      file:
+        path: /var/log/vault
+        state: directory
+      become: yes
+
+    - name: Create Vault Data directory
+      file:
+        path: /var/lib/vault/data
+        state: directory
+      become: yes
+
+    - name: Create a Vault Log symbolic link 
+      file:
+        src: /var/log/vault/
+        dest: /var/lib/vault/logs
+        owner: root
+        group: root
+        state: link
+      become: yes
+
+    - name: Create Vault Config directory
+      file:
+        path: /etc/vault
+        state: directory
+      become: yes
+
+
+    - name: Create config file
+      file:
+        path: /etc/vault/config.json
+      become: yes
+
+    - name: Create Vault User
+      user:
+        name: vault
+        group: vault
+        system: true
+    
+    - name: Change permissions to Vault User
+      file:
+        path: /var/lib/vault
+        state: directory
+        recurse: yes
+        owner: vault
+        group: vault
