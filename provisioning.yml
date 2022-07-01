@@ -97,7 +97,7 @@
         owner: vault
         group: vault
 
-    - name: Writing Vault configuration file
+    - name: Writing Vault Configuration file
       copy:
         dest: /etc/vault/config.json
         content: |
@@ -109,3 +109,38 @@
             address     = "0.0.0.0:8200"
             tls_disable = 1
           }
+      
+    - name: Writing Vault Service file
+      copy:
+        dest: /etc/systemd/system/vault.service
+        content: |
+          [Unit]
+          Description = Vault Server
+          Requires = network-online.target
+          After = network-online.target
+          ConditionFileNotEmpty = /etc/vault/config.json
+
+          [Service]
+          User = vault
+          Group = vault
+          Restart = on-failure
+          ExecStart = /usr/local/bin/vault server -config=/etc/vault/config.json
+          StandardOutput = /var/log/vault/output.log
+          StandardError = /var/log/vault/error.log
+          ExecReload = /bin/kill -HUP $MAINPID
+          KillSignal = SIGTERM
+
+          [Install]
+          WantedBy = multi-user.target
+
+    - name: Enabling Vault Service
+      systemd:
+        name: vault.service
+        enabled: yes
+        masked: no
+
+    - name: Starting Vault Service
+      systemd:
+        name: vault.service
+        state: started
+        enabled: yes
