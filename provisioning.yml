@@ -129,6 +129,7 @@
           StandardError = /var/log/vault/error.log
           ExecReload = /bin/kill -HUP $MAINPID
           KillSignal = SIGTERM
+          LimitMEMLOCK = infinity
 
           [Install]
           WantedBy = multi-user.target
