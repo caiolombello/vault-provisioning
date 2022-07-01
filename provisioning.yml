@@ -1,3 +1,34 @@
 - hosts: vault
   tasks:
-    - name: 
+    - name: Change hostname to vault
+      command: hostnamectl set-hostname vault
+      become: yes
+
+    - name: Edit hostname to /etc/hostname
+      lineinfile:
+        dest: /etc/hostname
+        regexp: '^ip*'
+        line: 'vault'
+        state: present
+      become: yes
+
+    - name: Add hostname to /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^127\.0\.0\.1[ \t]+localhost'
+        line: '127.0.0.1 localhost vault'
+        state: present
+      become: yes
+
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: latest
+        update_cache: true
+      become: yes
+
+    - name: Install Vault binary
+      unarchive:
+        src: https://releases.hashicorp.com/vault/1.11.0/vault_1.11.0_linux_arm64.zip?_ga=2.46861604.266934807.1656688916-601040367.1656688916&_gl=1*1s5r6o3*_ga*NjAxMDQwMzY3LjE2NTY2ODg5MTY.*_ga_P7S46ZYEKW*MTY1NjY4ODkxNS4xLjEuMTY1NjY4OTYyNS4w
+        dest: /usr/local/bin
+        remote_src: yes
