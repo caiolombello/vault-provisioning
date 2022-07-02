@@ -1,4 +1,4 @@
-# Provisioning Vaultl Server on AWS EC2
+# Provisioning Vault Server on AWS EC2
 
 Instance type: t4g.micro
 
