@@ -65,6 +65,13 @@
     - name: Create config file
       file:
         path: /etc/vault/config.json
+        state: touch
+      become: yes
+
+    - name: Create Vault Group
+      group:
+        name: vault
+        state: present
       become: yes
 
     - name: Create Vault User
@@ -72,6 +79,7 @@
         name: vault
         group: vault
         system: true
+      become: yes
     
     - name: '[/var/lib/vault] Change permissions to Vault User' 
       file:
@@ -80,6 +88,7 @@
         recurse: yes
         owner: vault
         group: vault
+      become: yes
 
     - name: '[/etc/vault] Change permissions to Vault User'
       file:
@@ -88,6 +97,7 @@
         recurse: yes
         owner: vault
         group: vault
+      become: yes
 
     - name: '[/var/log/vault] Change permissions to Vault User'
       file:
@@ -96,6 +106,7 @@
         recurse: yes
         owner: vault
         group: vault
+      become: yes
 
     - name: Writing Vault Configuration file
       copy:
@@ -109,6 +120,9 @@
             address     = "0.0.0.0:8200"
             tls_disable = 1
           }
+          
+          ui = true
+      become: yes
       
     - name: Writing Vault Service file
       copy:
@@ -133,23 +147,28 @@
 
           [Install]
           WantedBy = multi-user.target
+      become: yes
 
     - name: Enabling Vault Service
       systemd:
         name: vault.service
         enabled: yes
         masked: no
+      become: yes
 
     - name: Starting Vault Service
       systemd:
         name: vault.service
         state: started
         enabled: yes
+      become: yes
 
     - name: Vault Address
       shell:
         cmd: export VAULT_ADDR="http://127.0.0.1:8200"
+      become: yes
 
     - name: Apllying Vault Address to bashrc
       shell:
         cmd: echo "export VAULT_ADDR='http://127.0.0.1:8200' >> /root/.bashrc"
+      become: yes

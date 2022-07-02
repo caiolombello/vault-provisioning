@@ -30,6 +30,6 @@ variable "key_name" {
 
 # AWS Profile
 variable "aws_profile" {
-  type = string
+  type    = string
   default = "caiolvbarbieri"
 }
