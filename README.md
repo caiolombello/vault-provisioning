@@ -53,6 +53,6 @@ Instance specs:
     
     ```plaintext
     $ terraform destroy -force
-    $ rm -rf .terraform terraform.tfstate* private.key
+    $ rm -rf .terraform terraform.tfstate*
     ```
 
